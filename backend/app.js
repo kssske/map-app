@@ -10,9 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/posts", require("./routes/postsRoutes"));
-app.get("/test", (req, res) => {
-    res.send("test OK");
-});
+
 const PORT = process.env.PORT || 3000;
 
 (async () => {

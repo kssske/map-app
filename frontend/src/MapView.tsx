@@ -3,7 +3,11 @@ import mapboxgl from "mapbox-gl";
 import type { Post } from "./types";
 import "mapbox-gl/dist/mapbox-gl.css";
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-export default function MapView({ posts }: { posts: Post[] }) {
+type Props = {
+    posts: Post[]; //recive it as type Post
+    onMapClick: (coords: { lng: number; lat: number }) => void; //return void for now
+};
+export default function MapView({ posts, onMapClick }: Props) {
     const mapContainer = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -15,10 +19,15 @@ export default function MapView({ posts }: { posts: Post[] }) {
             center: [130.4017, 33.5902], // 博多
             zoom: 12
         });
+        map.on("click", (e) => { //when click 
+            const { lng, lat } = e.lngLat;
+            onMapClick({ lng, lat });
+        });
+        posts.forEach((post) => {
+            if (!post.lat || !post.lng) return;
 
-        posts.forEach(post => {
             new mapboxgl.Marker()
-                .setLngLat([post.lng, post.lat])  //specify where to place the pin.
+                .setLngLat([post.lng, post.lat])
                 .setPopup(
                     new mapboxgl.Popup().setHTML(
                         `<h3>${post.title}</h3><p>${post.description}</p>`

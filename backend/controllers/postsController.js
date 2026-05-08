@@ -5,7 +5,7 @@ exports.create = async (req, res) => {
         const { title, description, price, lat, lng } = req.body;
 
         const post = await Post.createPost(
-            req.user.id,
+            1,
             title,
             description,
             price,
