@@ -2,10 +2,10 @@ const Post = require("../models/postsModel");
 
 exports.create = async (req, res) => {
     try {
-        const { title, description, price, lat, lng } = req.body;
+        const { userId, title, description, price, lat, lng } = req.body;
 
         const post = await Post.createPost(
-            1,
+            userId,
             title,
             description,
             price,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";  //useState is for storing data related to the showing 
 import { Link, useNavigate } from "react-router-dom";
-import { fetchPosts, createPost } from "../api";
+import { fetchMap, locate } from "../api";
 import MapView from "../MapView";
 import type { Post } from "../types";
 
@@ -15,7 +15,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {    //execute only once, the moment the screen is displayed.　　so it Prevents infinite loops
-    fetchPosts().then(setPosts);  //fetchPosts then put it in setPosts
+    fetchMap().then(setPosts);  //fetchMap then put it in setPosts
   }, []);
 
   const handleCreate = async () => {
@@ -26,7 +26,7 @@ export default function Home() {
     }
     if (!selected) return;
 
-    await createPost({
+    await locate({
       title,
       description,
       price,
@@ -34,7 +34,7 @@ export default function Home() {
       lng: selected.lng,
     });
 
-    const newPosts = await fetchPosts();
+    const newPosts = await fetchMap();
     setPosts(newPosts);
     setSelected(null);
     setTitle("");

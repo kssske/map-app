@@ -13,8 +13,8 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
     }
 
     const res = await fetch(baseUrl + url, {
-        ...options,
-        headers
+        ...options,      // 1st
+        headers          //then
     });
 
     const data = await res.json();
@@ -26,19 +26,19 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
 
     return data as T;
 }
-export const fetchPosts = () => apiFetch<Post[]>("/api/get");
-
+export const fetchMap = () => apiFetch<Post[]>("/api/posts");
+export const locate = (data) =>
+    apiFetch<Post>("/api/posts", {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
 export const login = (email: string, password: string) =>
     apiFetch<{ token: string }>("/api/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
     });
 
-export const createPost = (data: Omit<Post, "id">) =>
-    apiFetch<Post>("/api/posts", {
-        method: "POST",
-        body: JSON.stringify(data),
-    });
+
 export const signup = (email: string, password: string) =>
     apiFetch<{ message: string }>("/api/signup", {
         method: "POST",
