@@ -7,5 +7,3 @@ router.post("/login", controller.login);
 module.exports = router;
 
 
-app.use("/api/posts", require("./routes/postsRoutes"));
-app.use("/api", require("./routes/authRoutes")); 

@@ -14,7 +14,7 @@ export default function Home() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  useEffect(() => {    //execute only once, the moment the screen is displayed.　　so it Prevents infinite loops
+  useEffect(() => {    //execute only once, the moment the screen is displayed.so it Prevents infinite loops
     fetchMap().then(setPosts);  //fetchMap then put it in setPosts
   }, []);
 
