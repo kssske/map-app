@@ -40,7 +40,7 @@ export const login = (email: string, password: string) =>
 
 
 export const signup = (email: string, password: string) =>
-    apiFetch<{ message: string }>("/api/signup", {
+    apiFetch<{ token: string; user: any }>("/api/signup", {
         method: "POST",
         body: JSON.stringify({ email, password }),
     });

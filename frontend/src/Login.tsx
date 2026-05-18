@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { login } from "./api";
-
+import { useNavigate } from "react-router-dom";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
+    const navigate = useNavigate();
     const handleLogin = async () => {
         try {
             const data = await login(email, password);
             localStorage.setItem("token", data.token);
+            navigate("/");
         } catch (err: any) {
             setError(err.error || "ログインに失敗しました");
         }
