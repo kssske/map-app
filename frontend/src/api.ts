@@ -1,4 +1,4 @@
-import type { Post } from "./types";
+import type { Post, AuthResponse } from "./types";
 const baseUrl = import.meta.env.VITE_API_URL;
 
 export async function apiFetch<T>(url: string, options: RequestInit = {}): Promise<T> {
@@ -33,14 +33,14 @@ export const locate = (data) =>
         body: JSON.stringify(data),
     });
 export const login = (email: string, password: string) =>
-    apiFetch<{ token: string }>("/api/login", {
+    apiFetch<AuthResponse>("/api/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
     });
 
 
 export const signup = (email: string, password: string) =>
-    apiFetch<{ token: string; user: any }>("/api/signup", {
+    apiFetch<AuthResponse>("/api/signup", {
         method: "POST",
         body: JSON.stringify({ email, password }),
     });
