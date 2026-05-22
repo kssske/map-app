@@ -1,51 +1,79 @@
-import { useEffect, useState } from "react";  //useState is for storing data related to the showing 
+import { useEffect, useState } from "react";  // useState is for storing data related to the showing 
 import { Link, useNavigate } from "react-router-dom";
 import { fetchMap, locate } from "../api";
 import MapView from "../MapView";
 import type { Post } from "../types";
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);    //generate a datastorage for type Post 
+  const [posts, setPosts] = useState<Post[]>([]);    // generate a datastorage for type Post 
   const [selected, setSelected] = useState<{ lat: number; lng: number } | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  useEffect(() => {    //execute only once, the moment the screen is displayed.so it Prevents infinite loops
-    fetchMap().then(setPosts);  //fetchMap then put it in setPosts
+  const loadData = async () => {
+    try {
+      setError(null); // 前のエラーをクリア
+      const data = await fetchMap();
+      setPosts(data);
+    } catch (err) {
+      setError("データの取得に失敗しました。");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {   // execute only once, the moment the screen is displayed.so it Prevents infinite loops
+    loadData();       // fetchMap then put it in setPosts
   }, []);
 
   const handleCreate = async () => {
     if (!token) {
-      alert("ログインしてください");
+      setError("ログインをしてください");
       navigate("/login");
       return;
     }
     if (!selected) return;
 
-    await locate({
-      title,
-      description,
-      price,
-      lat: selected.lat,
-      lng: selected.lng,
-    });
+    if (!title.trim()) {
+      setError("タイトルを入力してください。");
+      return;
+    }
 
-    const newPosts = await fetchMap();
-    setPosts(newPosts);
-    setSelected(null);
-    setTitle("");
-    setDescription("");
-    setPrice(0);
+    try {
+      await locate({
+        title,
+        description,
+        price,
+        lat: selected.lat,
+        lng: selected.lng,
+      });
+
+      await loadData();
+
+      // reset form
+      setSelected(null);
+      setTitle("");
+      setDescription("");
+      setPrice(0);
+    } catch (err) {
+      setError("投稿に失敗しました。");
+    }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     window.location.reload();
   };
+
+  if (loading) {
+    return <div style={{ padding: "20px", textAlign: "center" }}>地図データを読み込み中...</div>;
+  }
 
   return (
     <div style={{ padding: "20px" }}>
@@ -63,18 +91,24 @@ export default function Home() {
         </div>
       </header>
 
+      {error && (
+        <div style={{ color: "red", backgroundColor: "#ffe6e6", padding: "10px", borderRadius: "5px", margin: "10px 0" }}>
+          ⚠️ {error}
+        </div>
+      )}
+
       {/* 一覧 */}
       <section style={{ margin: "20px 0" }}>
         <h3>投稿一覧</h3>
         <ul>
-          {posts.map(p => (   //convert each one into a <li> tag.
+          {posts.map(p => (   // convert each one into a <li> tag.
             <li key={p.id}>{p.title} - {p.price}円</li>
           ))}
         </ul>
       </section>
 
       {/* 投稿フォーム */}
-      {selected && (  //show () unless null
+      {selected && (  // show () unless null
         <div style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0" }}>
           <p>選択中: {selected.lat}, {selected.lng}</p>
           <input placeholder="タイトル" value={title} onChange={(e) => setTitle(e.target.value)} />
