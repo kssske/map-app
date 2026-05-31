@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors");// to allow requests from a different location.
+const cors = require("cors");   // to allow requests from a different location.
 require("dotenv").config();
 
 const { initDB } = require("./db");
