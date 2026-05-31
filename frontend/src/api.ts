@@ -27,7 +27,7 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
     return data as T;
 }
 export const fetchMap = () => apiFetch<Post[]>("/api/posts");
-export const locate = (data) =>
+export const locate = (data: any) =>
     apiFetch<Post>("/api/posts", {
         method: "POST",
         body: JSON.stringify(data),
