@@ -28,8 +28,8 @@ export default function Login() {
             } else {
                 setError("メールアドレスまたはパスワードが違います。");
             }
-        } catch (err) {
-            setError("ログイン処理中にエラーが発生しました。");
+        } catch (err: any) {
+            setError(err.message || "ログイン処理中にエラーが発生しました。");
         } finally {
             setLoading(false);
         }
