@@ -30,6 +30,7 @@ export default function Login() {
             }
         } catch (err: any) {
             setError(err.message || "ログイン処理中にエラーが発生しました。");
+
         } finally {
             setLoading(false);
         }

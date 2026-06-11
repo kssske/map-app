@@ -4,9 +4,9 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require("bcryptjs");
 exports.validateMark = [
     body('email')
-        .isLength({ min: 2 }).withMessage('パスワードは1文字以上で入力してください'),
+        .isLength({ min: 2 }).withMessage('emailは2文字以上で入力してください'),
     body('password')
-        .isLength({ min: 1 }).withMessage('パスワードは1文字以上で入力してください'),
+        .isLength({ min: 1 }).withMessage('パスワードは1tgh文字以上で入力してください'),
 
     // バリデーション結果を判定するミドルウェア関数
     (req, res, next) => {

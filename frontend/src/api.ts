@@ -18,9 +18,12 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
     });
 
     const data = await res.json();
-
+    console.log("API error data:", data);
+    console.log(data.errors);
     if (!res.ok) {
-        const message = data.errors || data.error || "API error";
+        const message = Array.isArray(data.errors)
+            ? data.errors.map((e: any) => e.msg).join(", ")
+            : data.error || "API error";
         throw new Error(Array.isArray(message) ? message.join(", ") : message);
     }
 
