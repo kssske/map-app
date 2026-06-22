@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");   // to allow requests from a different location.
 require("dotenv").config();
-const { rateLimit } = require("express-rate-limit");
 const { initDB } = require("./db");
 
 const app = express();

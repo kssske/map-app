@@ -14,7 +14,7 @@ export default function MapView({ posts, onMapClick }: Props) {
     const mapContainer = useRef<HTMLDivElement | null>(null);
     const mapRef = useRef<mapboxgl.Map | null>(null);
     const markersRef = useRef<mapboxgl.Marker[]>([]);
-
+    const selectedMarkerRef = useRef<mapboxgl.Marker | null>(null);
 
     useEffect(() => {
         if (!mapContainer.current || mapRef.current) return;
@@ -28,6 +28,15 @@ export default function MapView({ posts, onMapClick }: Props) {
 
         map.on("click", (e) => {
             const { lng, lat } = e.lngLat;
+
+            if (selectedMarkerRef.current) {
+                selectedMarkerRef.current.remove();
+            }
+
+            selectedMarkerRef.current = new mapboxgl.Marker()
+                .setLngLat([lng, lat])
+                .addTo(map);
+
             onMapClick({ lng, lat });
         });
 
