@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";  // useState is for storing data related to the showing 
-import { Link, useNavigate } from "react-router-dom";
-import { fetchMap, locate } from "../api";
+import { Link } from "react-router-dom";
+import { fetchMap } from "../api";
 import MapView from "../MapView";
 import type { Post } from "../types";
 
@@ -10,7 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
-  const navigate = useNavigate();
+
 
   const loadData = async () => {
     try {
