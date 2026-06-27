@@ -13,7 +13,7 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
     }
 
     const res = await fetch(baseUrl + url, {
-        ...options,      // 1st
+        ...options,      // before
         headers          //then
     });
 
@@ -24,12 +24,12 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
         const message = Array.isArray(data.errors)
             ? data.errors.map((e: any) => e.msg).join(", ")
             : data.error || "API error";
-        throw new Error(Array.isArray(message) ? message.join(", ") : message);
+        throw new Error(message);
     }
 
     return data as T;
 }
-export const fetchMap = () => apiFetch<Post[]>("/api/posts");
+export const fetchMap = () => apiFetch<Post[]>("/api/posts");   //　[]　means multiple  without [] means single
 export const locate = (data: any) =>
     apiFetch<Post>("/api/posts", {
         method: "POST",

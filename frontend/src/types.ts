@@ -10,7 +10,7 @@ export type Post = {
 export interface User {
   id: number;
   email: string;
-  password?: string;    //or doesnt exist 
+  password?: string;    // ？　means optional 
   created_at?: string;
 }
 export interface AuthResponse {

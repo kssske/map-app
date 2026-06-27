@@ -7,11 +7,11 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 type Props = {
     posts: Post[];
-    onMapClick: (coords: { lng: number; lat: number }) => void;
+    onMapClick?: (coords: { lng: number; lat: number }) => void;
 };
 
 export default function MapView({ posts, onMapClick }: Props) {
-    const mapContainer = useRef<HTMLDivElement | null>(null);
+    const mapContainer = useRef<HTMLDivElement | null>(null);   //useRef does not re-render when the value changes.
     const mapRef = useRef<mapboxgl.Map | null>(null);
     const markersRef = useRef<mapboxgl.Marker[]>([]);
     const selectedMarkerRef = useRef<mapboxgl.Marker | null>(null);
@@ -26,19 +26,21 @@ export default function MapView({ posts, onMapClick }: Props) {
             zoom: 12
         });
 
-        map.on("click", (e) => {
-            const { lng, lat } = e.lngLat;
+        if (onMapClick) {
+            map.on("click", (e) => {
+                const { lng, lat } = e.lngLat;
 
-            if (selectedMarkerRef.current) {
-                selectedMarkerRef.current.remove();
-            }
+                if (selectedMarkerRef.current) {
+                    selectedMarkerRef.current.remove();
+                }
 
-            selectedMarkerRef.current = new mapboxgl.Marker()
-                .setLngLat([lng, lat])
-                .addTo(map);
+                selectedMarkerRef.current = new mapboxgl.Marker()
+                    .setLngLat([lng, lat])
+                    .addTo(map);
 
-            onMapClick({ lng, lat });
-        });
+                onMapClick({ lng, lat });
+            });
+        }
 
         mapRef.current = map;
 
@@ -47,7 +49,7 @@ export default function MapView({ posts, onMapClick }: Props) {
             map.remove();
             mapRef.current = null;
         };
-    }, []);
+    }, []);   // empty dependency array means  its executed only the first time
 
 
     useEffect(() => {

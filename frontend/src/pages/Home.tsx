@@ -6,10 +6,6 @@ import type { Post } from "../types";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);    // generate a datastorage for type Post 
-  const [selected, setSelected] = useState<{ lat: number; lng: number } | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,39 +28,7 @@ export default function Home() {
     loadData();       // fetchMap then put it in setPosts
   }, []);
 
-  const handleCreate = async () => {
-    if (!token) {
-      setError("ログインをしてください");
-      navigate("/login");
-      return;
-    }
-    if (!selected) return;
 
-    if (!title.trim()) {
-      setError("タイトルを入力してください。");
-      return;
-    }
-
-    try {
-      await locate({
-        title,
-        description,
-        price,
-        lat: selected.lat,
-        lng: selected.lng,
-      });
-
-      await loadData();
-
-      // reset form
-      setSelected(null);
-      setTitle("");
-      setDescription("");
-      setPrice(0);
-    } catch (err) {
-      setError("投稿に失敗しました。");
-    }
-  };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -86,7 +50,13 @@ export default function Home() {
               <Link to="/signup"><button>Signup</button></Link>
             </>
           ) : (
-            <button onClick={logout}>Logout</button>
+            <>
+              <Link to="/create">
+                <button>新規投稿</button>
+              </Link>
+
+              <button onClick={logout}>Logout</button>
+            </>
           )}
         </div>
       </header>
@@ -107,19 +77,8 @@ export default function Home() {
         </ul>
       </section>
 
-      {/* 投稿フォーム */}
-      {selected && (  // show () unless null
-        <div style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0" }}>
-          <p>選択中: {selected.lat}, {selected.lng}</p>
-          <input placeholder="タイトル" value={title} onChange={(e) => setTitle(e.target.value)} />
-          <input placeholder="説明" value={description} onChange={(e) => setDescription(e.target.value)} />
-          <input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
-          <button onClick={handleCreate}>投稿</button>
-        </div>
-      )}
 
-      {/* 地図 */}
-      <MapView posts={posts} onMapClick={setSelected} />
+      <MapView posts={posts} />
     </div>
   );
 }
