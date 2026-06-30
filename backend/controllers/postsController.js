@@ -19,7 +19,17 @@ exports.create = async (req, res) => {
         res.status(500).json({ error: "サーバーエラー" });
     }
 };
+exports.getPost = async (req, res) => {
+    const post = await Post.getPostById(req.params.id);
+    console.log(req.params);
+    if (!post) {
+        return res.status(404).json({
+            error: "投稿が見つかりません"
+        });
+    }
 
+    res.json(post);
+};
 exports.getAll = async (req, res) => {
     try {
         const posts = await Post.getAllPosts();

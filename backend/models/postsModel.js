@@ -12,7 +12,16 @@ exports.createPost = async (userId, title, description, price, lat, lng) => {
 
     return result.rows[0];
 };
+exports.getPostById = async (id) => {
+    const db = getDB();
 
+    const result = await db.query(
+        "SELECT * FROM posts WHERE id = $1",
+        [id]
+    );
+
+    return result.rows[0];
+};
 exports.getAllPosts = async () => {
     const db = getDB();
 

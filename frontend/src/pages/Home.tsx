@@ -72,7 +72,11 @@ export default function Home() {
         <h3>投稿一覧</h3>
         <ul>
           {posts.map(p => (   // convert each one into a <li> tag.
-            <li key={p.id}>{p.title} - {p.price}円</li>
+            <li key={p.id}>
+              <Link to={`/posts/${p.id}`}>
+                {p.title} - {p.price}円
+              </Link>
+            </li>
           ))}
         </ul>
       </section>

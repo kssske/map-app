@@ -30,6 +30,9 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
     return data as T;
 }
 export const fetchMap = () => apiFetch<Post[]>("/api/posts");   //　[]　means multiple  without [] means single
+export const fetchPost = (id: number) =>
+    apiFetch<Post>(`/api/posts/${id}`);
+
 export const locate = (data: any) =>
     apiFetch<Post>("/api/posts", {
         method: "POST",
